@@ -1,20 +1,21 @@
 #include "primitives.hpp"
 
 void drawLine(Engine * engine, double x1, double y1, double x2, double y2, Color c1, Color c2, uint32_t pattern) {
+    auto should_draw = [&]() {
+        pattern = (pattern << 1) | (pattern >> 31);
+        return pattern & 1;
+    };
+
     #ifdef LINE_LERP
     double dots = std::sqrt(std::pow(x1 - x2, 2) + std::pow(y1 - y2, 2));
     for (double u = 0.0f; u < 1.0f; u += 1 / dots)
-        engine->setPixel(std::round(lerp(x1, x2, u)), std::round(lerp(y1, y2, u)), lerp(c1, c2, u));
+        if (should_draw())
+            engine->setPixel(std::round(lerp(x1, x2, u)), std::round(lerp(y1, y2, u)), lerp(c1, c2, u));
     #endif
 
     #ifdef LINE_DIGITAL_DIFFERENTIAL_ANALYZER
     int x, y;
     int dx = x2 - x1, dy = y2 - y1;
-
-    auto should_draw = [&]() {
-        pattern = (pattern << 1) | (pattern >> 31);
-        return pattern & 1;
-    };
 
     if (dx == 0) {
         if (y2 < y1)
@@ -63,8 +64,9 @@ void drawLine(Engine * engine, double x1, double y1, double x2, double y2, Color
                     y--;
                 px = px + 2 * (ady - adx);
             }
-            if (should_draw())
+            if (should_draw()) {
                 engine->setPixel(x, y, lerp(c2, c1, (std::pow(x - x2, 2) - std::pow(y - y2, 2)) / (std::pow(x1 - x2, 2) - std::pow(y1 - y2, 2))));
+            }
         }
     } else {
         if (dy >= 0) {

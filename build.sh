@@ -9,7 +9,7 @@ fi
 [ ! -d build ] && mkdir build
 
 main_should_recompile="False"
-total=7
+total=9
 current=1
 
 start=$(date '+%s')
@@ -82,6 +82,16 @@ then
 fi
 
 recompile="False"
+printHeader src/Mat4.cpp
+checkRecomp src/Mat4.cpp build/src/Mat4.hash build/src/ build/src/Mat4.o 
+if [ $recompile == "True" ]
+then
+    g++ -c -std=c++17 -static-libstdc++ -static-libgcc -I"include/" -I"third-party/toolbox/" -L"lib/" src/Mat4.cpp -o build/src/Mat4.o 
+    checkSuccess build/src/Mat4.o build/src/Mat4.hash
+    echo "$(md5sum src/Mat4.cpp)" > build/src/Mat4.hash
+fi
+
+recompile="False"
 printHeader src/primitives.cpp
 checkRecomp src/primitives.cpp build/src/primitives.hash build/src/ build/src/primitives.o 
 if [ $recompile == "True" ]
@@ -112,12 +122,22 @@ then
 fi
 
 recompile="False"
+printHeader src/Vec4.cpp
+checkRecomp src/Vec4.cpp build/src/Vec4.hash build/src/ build/src/Vec4.o 
+if [ $recompile == "True" ]
+then
+    g++ -c -std=c++17 -static-libstdc++ -static-libgcc -I"include/" -I"third-party/toolbox/" -L"lib/" src/Vec4.cpp -o build/src/Vec4.o 
+    checkSuccess build/src/Vec4.o build/src/Vec4.hash
+    echo "$(md5sum src/Vec4.cpp)" > build/src/Vec4.hash
+fi
+
+recompile="False"
 printHeader src/main.cpp
 checkRecomp src/main.cpp build/src/main.hash build/src/ build/src/main.out
 if [ $recompile == "True" ] || [ $main_should_recompile == "True" ]
 then
     printf -- "..... \e[38;05;3;49;04;27mmain.cpp\e[0m \e[38;05;10;49;24;27mis updating, because other files have changed\e[0m\n"
-    g++ -std=c++17 -static-libstdc++ -static-libgcc -I"include/" -I"third-party/toolbox/" -L"lib/" src/main.cpp -o build/src/main.out build/src/Color.o build/src/Engine.o build/src/Mat3.o build/src/primitives.o build/src/utils.o build/src/Vec3.o -lpthread -lSDL2main -lSDL2
+    g++ -std=c++17 -static-libstdc++ -static-libgcc -I"include/" -I"third-party/toolbox/" -L"lib/" src/main.cpp -o build/src/main.out build/src/Color.o build/src/Engine.o build/src/Mat3.o build/src/Mat4.o build/src/primitives.o build/src/utils.o build/src/Vec3.o build/src/Vec4.o -lpthread -lSDL2main -lSDL2
     checkSuccess build/src/main.out build/src/main.hash
     echo "$(md5sum src/main.cpp)" > build/src/main.hash
 fi

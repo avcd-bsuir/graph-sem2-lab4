@@ -21,9 +21,11 @@
         { "path": "src/Color.cpp", "flags": "", "binaries": "" },
         { "path": "src/Engine.cpp", "flags": "", "binaries": "" },
         { "path": "src/Mat3.cpp", "flags": "", "binaries": "" },
+        { "path": "src/Mat4.cpp", "flags": "", "binaries": "" },
         { "path": "src/primitives.cpp", "flags": "", "binaries": "" },
         { "path": "src/utils.cpp", "flags": "", "binaries": "" },
-        { "path": "src/Vec3.cpp", "flags": "", "binaries": "" }
+        { "path": "src/Vec3.cpp", "flags": "", "binaries": "" },
+        { "path": "src/Vec4.cpp", "flags": "", "binaries": "" }
     ],
     "extra_commands": [
         "cp build/src/main.out bin/main",
